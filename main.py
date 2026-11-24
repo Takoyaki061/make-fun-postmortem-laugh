@@ -17,6 +17,14 @@ ENTRY = (
 
 
 def main() -> None:
+    # Fail loudly instead of submitting an invalid entry: the sealed
+    # scorer only accepts 1-400 characters of non-whitespace text.
+    stripped = ENTRY.strip()
+    assert 1 <= len(ENTRY) <= 400, f"entry is {len(ENTRY)} chars, gate is 1-400"
+    assert stripped, "entry must not be only whitespace"
+    assert ENTRY.replace("log.3.gz", "LOGFILE").count(".") <= 2, (
+        "entry must be 1-2 sentences"
+    )
     os.makedirs("/output", exist_ok=True)
     with open("/output/entry.txt", "w", encoding="utf-8") as f:
         f.write(ENTRY)
